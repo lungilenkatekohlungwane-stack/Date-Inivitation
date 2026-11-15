@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Date With Me? ❤️</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#ffb6d0,#ff69a6,#ffc1dc);
+  color: #851344;
+}
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  bottom: -50px;
+  animation: floatUp linear infinite;
+  opacity: .8;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0); opacity: 0; }
+  15% { opacity: .9; }
+  100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+}
+
+.card {
+  position: relative;
+  z-index: 2;
+  width: min(90%, 500px);
+  padding: 35px 24px;
+  text-align: center;
+  background: rgba(255,255,255,.91);
+  border-radius: 28px;
+  box-shadow: 0 15px 50px #9b174a44;
+}
+
+h1 { font-size: 2rem; }
+p { line-height: 1.6; }
+
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 14px 25px;
+  margin: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#yes, .place {
+  background: #ff3983;
+  color: white;
+}
+
+#no {
+  background: #eee;
+  color: #666;
+  position: absolute;
+}
+
+.button-area {
+  height: 110px;
+  position: relative;
+  margin-top: 20px;
+}
+
+#yes { position: relative; }
+
+#success, #places, #final {
+  display: none;
+}
+
+.place {
+  display: block;
+  width: 85%;
+  margin: 14px auto;
+  padding: 16px;
+  font-size: 1.1rem;
+}
+
+.place:hover { transform: scale(1.04); }
+
+.small { color: #a35b78; font-size: .9rem; }
+</style>
+</head>
+
+<body>
+<div class="hearts" id="hearts"></div>
+
+<main class="card">
+
+  <section id="question">
+    <div style="font-size:55px">🥺💗</div>
+    <h1>Would you take me out on a date?</h1>
+    <p>Be honest... 👀❤️</p>
+
+    <div class="button-area" id="buttonArea">
+      <button id="yes">Yes ❤️</button>
+      <button id="no">No 😭</button>
+    </div>
+    <p class="small">Choose wisely 😂💕</p>
+  </section>
+
+  <section id="success">
+    <div style="font-size:55px">🥳💗</div>
+    <h1>YAYYYYY! ❤️</h1>
+    <p>
+      You just made my day! 🥹❤️<br>
+      I can't wait to spend some time with you.
+      Now, let's decide where you're taking me 😌
+    </p>
+    <button class="place" onclick="showPlaces()">
+      Choose our date spot 💕
+    </button>
+  </section>
+
+  <section id="places">
+    <div style="font-size:50px">🍽️💗</div>
+    <h1>Where are you taking me?</h1>
+    <p>I'll let you do the choosing 😂</p>
+
+    <button class="place" onclick="choose('Pantry')">
+      🍰 Pantry
+    </button>
+
+    <button class="place" onclick="choose('McDonald’s')">
+      🍔 McDonald's
+    </button>
+
+    <p class="small">Both sound like a good idea to me 👀</p>
+  </section>
+
+  <section id="final">
+    <div style="font-size:55px">😍❤️</div>
+    <h1>It's a date!</h1>
+    <p id="chosenPlace"></p>
+    <p>
+      I already know I'm going to enjoy this.
+      Looking forward to seeing you! 🥹💕
+    </p>
+    <div style="font-size:35px">💗💗💗</div>
+  </section>
+
+</main>
+
+<script>
+// Floating animated hearts
+const heartContainer = document.getElementById("hearts");
+const symbols = ["❤️","💕","💗","💖","🩷"];
+
+for (let i = 0; i < 28; i++) {
+  const heart = document.createElement("span");
+  heart.className = "heart";
+  heart.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+  heart.style.left = Math.random()*100 + "vw";
+  heart.style.animationDuration = (6 + Math.random()*8) + "s";
+  heart.style.animationDelay = Math.random()*8 + "s";
+  heart.style.fontSize = (18 + Math.random()*25) + "px";
+  heartContainer.appendChild(heart);
+}
+
+// The No button runs away
+const no = document.getElementById("no");
+const area = document.getElementById("buttonArea");
+
+function moveNo() {
+  const maxX = area.clientWidth - no.offsetWidth;
+  const maxY = area.clientHeight - no.offsetHeight;
+
+  no.style.left = Math.max(0,Math.random()*maxX) + "px";
+  no.style.top = Math.max(0,Math.random()*maxY) + "px";
+}
+
+no.addEventListener("pointerenter", moveNo);
+no.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  moveNo();
+});
+no.addEventListener("click", e => {
+  e.preventDefault();
+  moveNo();
+});
+
+// Yes reveals the next screen
+document.getElementById("yes").onclick = () => {
+  document.getElementById("question").style.display = "none";
+  document.getElementById("success").style.display = "block";
+};
+
+function showPlaces() {
+  document.getElementById("success").style.display = "none";
+  document.getElementById("places").style.display = "block";
+}
+
+function choose(place) {
+  document.getElementById("places").style.display = "none";
+  document.getElementById("final").style.display = "block";
+  document.getElementById("chosenPlace").textContent =
+    "So we're going to " + place + "! 😍";
+}
+</script>
+</body>
+</html>
